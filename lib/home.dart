@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-
-import '../model/todo.dart';
-import '../constants/colors.dart';
-import '../widgets/todo_item.dart';
+import 'package:todoo/model.dart';
+import 'package:todoo/todo_item.dart';
 
 class Home extends StatefulWidget {
   Home({Key? key}) : super(key: key);
@@ -10,6 +8,7 @@ class Home extends StatefulWidget {
   @override
   State<Home> createState() => _HomeState();
 }
+
 class _HomeState extends State<Home> {
   final todosList = ToDo.todoList();
   List<ToDo> _foundToDo = [];
@@ -24,8 +23,7 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: tdBGColor,
-      appBar: _buildAppBar(),
+      backgroundColor: Colors.blue,
       body: Stack(
         children: [
           Container(
@@ -35,7 +33,6 @@ class _HomeState extends State<Home> {
             ),
             child: Column(
               children: [
-                searchBox(),
                 Expanded(
                   child: ListView(
                     children: [
@@ -45,7 +42,7 @@ class _HomeState extends State<Home> {
                           bottom: 20,
                         ),
                         child: Text(
-                          'All ToDos',
+                          'Все заметки',
                           style: TextStyle(
                             fontSize: 30,
                             fontWeight: FontWeight.w500,
@@ -93,8 +90,7 @@ class _HomeState extends State<Home> {
                   child: TextField(
                     controller: _todoController,
                     decoration: InputDecoration(
-                        hintText: 'Add a new todo item',
-                        border: InputBorder.none),
+                        hintText: 'Добавь заметку', border: InputBorder.none),
                   ),
                 ),
               ),
@@ -114,7 +110,7 @@ class _HomeState extends State<Home> {
                     _addToDoItem(_todoController.text);
                   },
                   style: ElevatedButton.styleFrom(
-                    primary: tdBlue,
+                    primary: Colors.blue,
                     minimumSize: Size(60, 60),
                     elevation: 10,
                   ),
@@ -126,7 +122,8 @@ class _HomeState extends State<Home> {
       ),
     );
   }
- void _handleToDoChange(ToDo todo) {
+
+  void _handleToDoChange(ToDo todo) {
     setState(() {
       todo.isDone = !todo.isDone;
     });
@@ -147,50 +144,4 @@ class _HomeState extends State<Home> {
     });
     _todoController.clear();
   }
-
-  void _runFilter(String enteredKeyword) {
-    List<ToDo> results = [];
-    if (enteredKeyword.isEmpty) {
-      results = todosList;
-    } else {
-      results = todosList
-          .where((item) => item.todoText!
-              .toLowerCase()
-              .contains(enteredKeyword.toLowerCase()))
-          .toList();
-    }
-
-    setState(() {
-      _foundToDo = results;
-    });
-  }
-
-  Widget searchBox() {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 15),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: TextField(
-        onChanged: (value) => _runFilter(value),
-        decoration: InputDecoration(
-          contentPadding: EdgeInsets.all(0),
-          prefixIcon: Icon(
-            Icons.search,
-            color: tdBlack,
-            size: 20,
-          ),
-          prefixIconConstraints: BoxConstraints(
-            maxHeight: 20,
-            minWidth: 25,
-          ),
-          border: InputBorder.none,
-          hintText: 'Search',
-          hintStyle: TextStyle(color: tdGrey),
-        ),
-      ),
-    );
-  }
 }
-
